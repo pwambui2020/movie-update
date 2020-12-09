@@ -132,6 +132,6 @@ REST_FRAMEWORK = {
         'knox.auth.TokenAuthentication',
     ]
 }
-
+AUTH_USER_MODEL = 'post.NewUser'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
