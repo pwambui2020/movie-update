@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import NewUser
+from .models import User
 from django.contrib.auth.admin import UserAdmin
 from django.forms import TextInput, Textarea
 
 
 class UserAdminConfig(UserAdmin):
-    model = NewUser
+    model = User
     search_fields = ('email', 'user_name', 'first_name',)
     list_filter = ('email', 'user_name', 'first_name', 'is_active', 'is_staff')
     ordering = ['-start_date']
@@ -17,7 +17,7 @@ class UserAdminConfig(UserAdmin):
         ('Personal', {'fields': ('about',)}),
     )
     formfield_overrides = {
-        NewUser.about: {'widget': Textarea(attrs={'rows': 10, 'cols': 40})},
+        User.about: {'widget': Textarea(attrs={'rows': 10, 'cols': 40})},
     }
     add_fieldsets = (
         (None, {
@@ -27,4 +27,4 @@ class UserAdminConfig(UserAdmin):
     )
 
     
-admin.site.register( NewUser, UserAdminConfig )
+admin.site.register( User, UserAdminConfig )

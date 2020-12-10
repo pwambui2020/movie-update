@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'knox',
+    'cloudinary',
+    'django_rest_passwordreset',
       
     
     
@@ -132,6 +134,7 @@ REST_FRAMEWORK = {
         'knox.auth.TokenAuthentication',
     ]
 }
-AUTH_USER_MODEL = 'post.NewUser'
+AUTH_USER_MODEL = 'post.User'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
