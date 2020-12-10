@@ -13,5 +13,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'), 
     path('api/change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    # path('register/', RegistrationAPI.as_view()),
+
 ]
 

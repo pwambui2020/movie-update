@@ -16,17 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+# from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+# import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('post.urls')),
+    path('api/auth/', include('knox.urls')),  
+    
        # Login and Logout
     path('login/', auth_views.LoginView.as_view(redirect_authenticated_user=True,template_name='commons/login.html'
         ), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='commons/logout.html'), name='logout'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+   
 ]
 
 
