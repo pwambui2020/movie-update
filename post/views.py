@@ -1,10 +1,11 @@
 from django.shortcuts import render
+from .models import Program
 
 # Create your views here.
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer
+from .serializers import UserSerializer, RegisterSerializer, ProgramSerializer
 from django.contrib.auth import login
 from rest_framework import permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -17,6 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 # Register API
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -75,7 +77,33 @@ class ChangePasswordView(generics.UpdateAPIView):
 def home(request):
     return render(request,'home.html')
 
-def index(request):
-    return render(request,'index.html')
+
+class ProgramsApi(generics.GenericAPIView):
+    serializer_class = ProgramSerializer
+    # permission_classes = (IsAuthenticated,)
+    def get(self, request, *args, **kwargs):
+        programs = Program.objects.all()
+        serializer = ProgramSerializer(programs, many=True)
+        serializer.data
+        
+        return Response(serializer.data)
+     
+    def post(self, request, *args, **kwargs):
+        print(request.user)
+        serializer = ProgramSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        name = serializer.validated_data['name']  
+        caption = serializer.validated_data['caption'] 
+        start_time = serializer.validated_data['start_time'] 
+        end_time = serializer.validated_data['end_time']      
+        new_program = Program.objects.create(name=name, caption=caption, start_time=start_time,end_time=end_time)
+        new_program.save()
+        serializer = ProgramSerializer(new_program)
+        serializer.data
+        
+        return Response(serializer.data)
+        
+        
+
     
  
