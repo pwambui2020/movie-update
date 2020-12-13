@@ -42,10 +42,10 @@ class CustomAccountManager(BaseUserManager):
             raise ValueError(
                 'Superuser must be assigned to is_superuser=True.')
 
-        return self.create_user(email, username, first_name, password, **other_fields)
+        return self.create_user(email, username, first_name, password,  **other_fields)
           
             
-    def create_user(self, email, username, first_name, password, **other_fields):
+    def create_user(self, email, username, first_name, password, channel, **other_fields):
         
         if not email:
             raise ValueError(_('You must provide an email address'))
@@ -53,6 +53,7 @@ class CustomAccountManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username,first_name=first_name, **other_fields)
         user.set_password(password)
+        user.channel = channel
         user.save()
         return user  
     
@@ -63,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True)
     start_date = models.DateTimeField(default=timezone.now)
+    channel = models.CharField(max_length=150, blank=True)   
     about = models.TextField(_(
         'about'), max_length=500, blank=True)
     is_staff = models.BooleanField(default=False)
@@ -71,7 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name']
+    REQUIRED_FIELDS = ['username', 'first_name', 'channel']
 
     def __str__(self):
         return self.username
@@ -121,6 +123,8 @@ class Program(models.Model):
     caption = models.CharField(max_length=250, blank=True)    
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='posts')
     created = models.DateTimeField(auto_now_add=True, null=True)
+    start_time = models.DateTimeField(default=timezone.now, null=False)
+    end_time = models.DateTimeField(default=timezone.now, null=False)
     image = CloudinaryField('image')
 
     class Meta:
